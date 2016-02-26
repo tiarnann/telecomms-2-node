@@ -48,7 +48,6 @@ class Server
 
 	onReceivePacket(packet)
 	{	
-		console.log('Received packet');
 		let address=this.socket.address();
 		let forHere=(address.port==packet.destination.port);
 		if(!forHere) this.send(packet);
@@ -57,19 +56,18 @@ class Server
 
 	onReceiveRoutingTable(routingTableString, sender)
 	{
-		//Remove ROUTING_TABLE_INDENTIFIER
 		routingTableString=routingTableString.substring(1);
 		let routingTableCopy=RoutingTable.parseToRoutingTable(routingTableString);
-		console.log('Received routing table');
-		console.log(`Sent from:${sender.port}    Cost:${this.forwardingTable.nodeCost(sender.port)}     Next:${this.forwardingTable.nextHop(sender.port)}`);
 		let receivedTable=RoutingTable.fromPartial(routingTableString,sender.port, this.forwardingTable.nodeCost(sender.port));
 
 		this.forwardingTable=RoutingTable.distanceVector(this.forwardingTable, receivedTable);
 		if(RoutingTable.equals(routingTableCopy, this.forwardingTable))
 		{
 			console.log(`Sending routing table to ${sender.address}:${sender.port}`);
-			this.distributeRoutingTableToNeighbours(sender);
+			this.distributeRoutingTableToNeighbours();
 		}
+		//DEBUG ONLY
+		//this.forwardingTable.print();
 	}
 	send(packet)
 	{
@@ -106,8 +104,6 @@ class Server
 			this.forwardingTable.addRouter(node, randomCost, node);
 		}
 		this.distributeRoutingTableToNeighbours();
-		//DEBUG
-		this.forwardingTable.print();
 	}
 }
 

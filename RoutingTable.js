@@ -85,9 +85,8 @@ class RoutingTable
 	*/
 	nextHop(node)
 	{
-		for(var i=0; i < this.routingTable.length; i++)
+		for(let row of this.routingTable)
 		{
-			var row= this.routingTable[i];
 			if(row.getNode() ==  node)
 			{
 				return row.getNextHop();
@@ -107,9 +106,8 @@ class RoutingTable
 	*/
 	nodeCost(node)
 	{
-		for(var i=0; i < this.routingTable.length; i++)
+		for(let row of this.routingTable)
 		{
-			var row= this.routingTable[i];
 			if(row.getNode() ==  node)
 			{
 				return row.getCost();
@@ -188,26 +186,26 @@ class RoutingTable
 	    let newTable = new RoutingTable(newCapacity);
 
 	    oldTable.routingTable=oldTable.routingTable.concat(receivedTable.routingTable);
-
-	    Array.from(oldTable.routingTable,(obj, index)=>
+	    for(let i=0; i < oldTable.routingTable.length; i++)
+	    {
+	    	let row=oldTable.routingTable[i];
+	    	let node=row.node;
+	    	let cost=row.cost
+	    	let nextHop=row.nextHop;
+	    	for(let j=i+1; j < oldTable.routingTable.length; j++)
 	    	{
-	    		let node=obj.getNode();
-	    		let cost=obj.getCost();
-	    		let nextHop=obj.getNextHop();
-	    		for(let i=index+1; i< oldTable.routingTable.length; i++)
+	    		if(oldTable.routingTable[j].getNode() == node)
 	    		{
-	    			if(oldTable.routingTable[i].getNode() == node)
+	    			if(oldTable.routingTable[j].getCost() < cost)
 	    			{
-		    			if(oldTable.routingTable[i].getCost() < cost)
-		    			{
-		    				obj.cost=oldTable.routingTable[i].getCost();
-		    				obj.nextHop=oldTable.routingTable[i].getNextHop();
-		    			}
-		    			oldTable.routingTable.splice(i,i+1);
+						oldTable.routingTable[i].cost=oldTable.routingTable[j].cost;
+						oldTable.routingTable[i].nextHop=oldTable.routingTable[j].nextHop;
 	    			}
+	    			oldTable.routingTable.splice(j, 1);
 	    		}
-	    		newTable.addRouter(node, cost, nextHop);
-	    	});
+	    	}
+	    	newTable.addRouter(oldTable.routingTable[i].node, oldTable.routingTable[i].cost, oldTable.routingTable[i].nextHop);
+	    }
 	    return newTable;
 	}
 

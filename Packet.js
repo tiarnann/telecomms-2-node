@@ -53,7 +53,7 @@ class Packet
 
 	toString()
 	{
-		return JSON.stringify(packetString);
+		return JSON.stringify(this);
 	}
 }
 
