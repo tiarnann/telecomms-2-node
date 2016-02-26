@@ -8,7 +8,6 @@ Install [Node.js](https://nodejs.org/en/), then run the following terminal comma
 
 #### Todo List
     1. Link State Routing
-    2. Client
 
 
 
