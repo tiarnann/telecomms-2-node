@@ -30,9 +30,9 @@ console.log(`\n/*==================================/
 	\n ==================================*/\n`);
 
 let ServerConfigObjects=[
-	{port:5000,address:'localhost',connected:[5001,5003,5005]},			/* A */
+	{port:5000,address:'localhost',connected:[5001,5003,5005]},		/* A */
 	{port:5001,address:'localhost',connected:[5000,5002,5003,5006]},	/* B */
-	{port:5002,address:'localhost',connected:[5001,5003,5007]},			/* C */
+	{port:5002,address:'localhost',connected:[5001,5003,5007]},		/* C */
 	{port:5003,address:'localhost',connected:[5000,5001,5002,5008]}		/* D */
 ];
 
