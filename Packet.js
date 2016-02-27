@@ -41,12 +41,12 @@ class Packet
 	{
 		if(typeof packetString ==='string')
 		{
-			let obj=JSON.parse(packetString); 
+			let obj=JSON.parse(packetString);
 			return new Packet(obj.message,obj.destination.address,obj.destination.port,obj.source.port,obj.source.port);
 		}
 		else
 		{
-			throw Error('Failed to parse packet as it was');
+			throw Error('Failed to parse packet as it was not a string');
 			return null;
 		}
 	}

@@ -21,7 +21,7 @@ class Server
 		this.socket.bind(config,()=>
 		{
 			//Routing Table Config
-			this.forwardingTable=new RoutingTable(config.connected.length);
+			this.forwardingTable=new RoutingTable(config.connected.length+1);
 			this.connected=config.connected.slice();
 			this.generateRoutingTable()
 		});
@@ -66,6 +66,7 @@ class Server
 			console.log(`Sending routing table to ${sender.address}:${sender.port}`);
 			this.distributeRoutingTableToNeighbours();
 		}
+
 		//DEBUG ONLY
 		//this.forwardingTable.print();
 	}
@@ -97,13 +98,14 @@ class Server
 	generateRoutingTable()
 	{
 		let address=this.socket.address();
-		
+		this.forwardingTable.addRouter(address.port, 0, address.port);
 		for(let node of this.connected)
 		{
 			let randomCost=parseInt((Math.random()*46)%10)+3;
 			this.forwardingTable.addRouter(node, randomCost, node);
 		}
 		this.distributeRoutingTableToNeighbours();
+
 	}
 }
 

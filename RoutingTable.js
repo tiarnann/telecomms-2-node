@@ -177,14 +177,7 @@ class RoutingTable
 	*/
 	static distanceVector(oldTable, receivedTable)
 	{
-	    let newCapacity=0;
-	    for(let row of receivedTable.routingTable)
-	    {
-	    	if(oldTable.nodeCost(row.getNode())==-1) newCapacity++;
-	    }
-	    newCapacity+=oldTable.getCapacity();
-	    let newTable = new RoutingTable(newCapacity);
-
+		let routers=[];
 	    oldTable.routingTable=oldTable.routingTable.concat(receivedTable.routingTable);
 	    for(let i=0; i < oldTable.routingTable.length; i++)
 	    {
@@ -204,8 +197,13 @@ class RoutingTable
 	    			oldTable.routingTable.splice(j, 1);
 	    		}
 	    	}
-	    	newTable.addRouter(oldTable.routingTable[i].node, oldTable.routingTable[i].cost, oldTable.routingTable[i].nextHop);
+	    	routers.push(new TableRow(oldTable.routingTable[i].node, oldTable.routingTable[i].cost, oldTable.routingTable[i].nextHop));
 	    }
+
+	    let newTable = new RoutingTable(routers.length);
+	    newTable.filled=routers.length;
+	    newTable.routingTable=routers.slice();
+
 	    return newTable;
 	}
 
@@ -251,6 +249,65 @@ class RoutingTable
 	    	newTable.addRouter(row.node, row.cost, row.nextHop);
 	    }
 	    return newTable;
+	}
+	/*
+		function Dijkstra(Graph, node)
+		Description: Dijkstra's algorithm of finding shortest paths
+		@params
+			Graph: Graph 
+			source : Number (Node)
+		@return
+			{dist:dist.slice(), prev:prev.slice}
+
+
+	*/
+	static Dijkstra(graph, source)
+	{
+		let Q= [];
+		let dist={};
+		let prev={};
+
+		for(let key in graph)
+		{
+			  dist[key] = Infinity;                  // Unknown distance from source to v
+	          prev[key] = null;
+	          Q.push(parseInt(key));
+		}
+		dist[source]=0;
+		prev[source]=source;
+
+		while(Q.length != 0)
+		{
+			let current;
+			let min=Infinity;
+
+			for(let key in dist) 
+			{
+				if(dist[key] < min && Q.indexOf(parseInt(key))!=-1)
+				{
+					min=dist[key];
+					current=parseInt(key);
+				}
+			}
+			Q.splice(Q.indexOf(current), 1);
+
+			let connections=graph[current].connections.filter((val)=> {
+			 	return (Q.indexOf(val.node)!=-1);
+			});
+			//console.log(connections);
+			for(let vertex of connections)
+			{	
+				let length= dist[current] + vertex.cost;
+				//console.log(`Length: ${length}	dist[current]${dist[current]}	dist[vertex.node]${dist[vertex.node]} vertex.cost${vertex.cost}`);
+				if(length < dist[vertex.node])
+				{
+					dist[vertex.node]=length;
+					prev[vertex.node]=current;
+					//console.log(`Length: ${dist[vertex.node]}, Current: ${prev[vertex.node]}`);
+				}
+			}
+		}
+		return {dist:dist, prev:prev};
 	}
 
 	/*
