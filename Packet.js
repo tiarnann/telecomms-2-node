@@ -42,7 +42,7 @@ class Packet
 		if(typeof packetString ==='string')
 		{
 			let obj=JSON.parse(packetString);
-			return new Packet(obj.message,obj.destination.address,obj.destination.port,obj.source.port,obj.source.port);
+			return new Packet(obj.message,obj.destination.address,obj.destination.port,obj.source.address,obj.source.port);
 		}
 		else
 		{
