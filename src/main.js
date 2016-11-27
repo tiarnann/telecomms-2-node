@@ -3,7 +3,7 @@
 //Set Routing type here!!
 let LSR=true;
 let ROUTING_TYPE=(LSR)?'LinkState':'DistanceVector';
-let Server=require(`../lib/Server_${ROUTING_TYPE}Routing`);
+let Server=require(`../lib/routing/${ROUTING_TYPE}`);
 let Client=require('../lib/Client');
 
 /* ==================================
